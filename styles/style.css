@@ -1,0 +1,59 @@
+
+/*
+browser-sync start --server --files "**/*.css, **/*.html"
+browser-sync start --server --files "**"
+*/
+
+html {
+    box-sizing: border-box;
+    height: 100%;
+}
+
+*,
+*:before,
+*:after {
+    box-sizing: inherit;
+}
+
+body {
+    font: 16px/24px helvetica,arial,sans-serif;
+    color: #333;
+    background: #fff;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+}
+
+.container {
+    width: ;
+    margin: 0 auto;
+    padding-top: 5%;
+}
+
+.box {
+    display: table;
+    text-align: center;
+    width: ;
+    width: ;
+    margin: 10px auto;
+}
+
+.row {
+    display: table-row;
+}
+
+.grid {
+    box-sizing: border-box;
+    display: table-cell;
+    vertical-align: middle;
+    border: 2px solid #ddd;
+    border-radius: 2px;
+    width: 100px;
+    height: 100px;
+    font-size: ;
+    color: #bbb;
+}
+
+.grid:hover {
+    cursor: pointer;
+}
