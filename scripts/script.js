@@ -5,12 +5,26 @@ $(function() {
 	render(16);
 	showMine();
 	showNum();
-	// $(".grid").click(play);
+	$(".grid").click(play);
 
 });
 
+function play(event) {
+	let key = event.which;
+	if (key === 1) {
+		if ($(this).hasClass("mine")) {
+			showMine;
+			confirm("Oh,Game Over...Play again?");
+			return;
+		}
+	} else if (key === 3) {
+		event.preventDefault();
+		$(this).text("f");
+	}
+}
+
 function showNum() {
-	let i, j, k;
+	let i, j, k, m, n;
 	let count = 0;
 	let near = [];
 	for (i = 0; i < 16; i++) {
@@ -18,17 +32,18 @@ function showNum() {
 			near = [[i - 1, j - 1],[i - 1, j], [i - 1, j + 1],
 							[i + 1, j - 1],[i + 1, j], [i + 1, j + 1],
 							[i, j - 1], [i, j + 1]];
-			const grid = $(".row").eq(i).find(".grid").eq(j);
-			if (!grid.hasClass("mine")) {
+			const currentGrid = $(".row").eq(i).find(".grid").eq(j);
+			if (!currentGrid.hasClass("mine")) {
 				for (k = 0; k < 8; k ++) {
-					let nearGrid = $(".row").eq(near[k][0]).find(".grid").eq(near[k][1]);
+					m = near[k][0];
+					n = near[k][1];
+					let nearGrid = $(".row").eq(m).find(".grid").eq(n);
 					if(nearGrid.hasClass("mine")) {
 						count++;
 					}
 				}
-
 				if (count > 0) {
-					grid.text(count);
+					currentGrid.text(count);
 					count = 0;
 				}
 			}
@@ -43,7 +58,6 @@ function showMine() {
 	for (i = 0; i < l; i++) {
 		$(".row").eq(Mines[i][0]).find(".grid").eq(Mines[i][1]).addClass("mine")
 	}
-	$("p").eq(0).append(": " + l);
 }
 
 function randMine() {
@@ -62,6 +76,7 @@ function randMine() {
 		randPos.push(randxy());
 		l = randPos.length;
 	}
+	$("p").eq(0).append(": " + l);
 	return randPos;
 }
 
