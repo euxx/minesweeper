@@ -34,6 +34,7 @@ body {
     display: table;
     text-align: center;
     margin: 10px auto;
+    border-collapse: collapse;
 }
 
 .row {
@@ -44,10 +45,10 @@ body {
     box-sizing: border-box;
     display: table-cell;
     vertical-align: middle;
-    border: 2px solid #ddd;
+    border: 1px solid #ddd;
     border-radius: 2px;
     width: 20px;
-    height: 20px;
+    height: 20spx;
     font-size: ;
     color: #bbb;
 }

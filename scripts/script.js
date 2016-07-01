@@ -4,9 +4,37 @@ $(function() {
 	display();
 	render(16);
 	showMine();
+	showNum();
 	// $(".grid").click(play);
 
 });
+
+function showNum() {
+	let i, j, k;
+	let count = 0;
+	let near = [];
+	for (i = 0; i < 16; i++) {
+		for (j = 0; j < 16; j++) {
+			near = [[i - 1, j - 1],[i - 1, j], [i - 1, j + 1],
+							[i + 1, j - 1],[i + 1, j], [i + 1, j + 1],
+							[i, j - 1], [i, j + 1]];
+			const grid = $(".row").eq(i).find(".grid").eq(j);
+			if (!grid.hasClass("mine")) {
+				for (k = 0; k < 8; k ++) {
+					let nearGrid = $(".row").eq(near[k][0]).find(".grid").eq(near[k][1]);
+					if(nearGrid.hasClass("mine")) {
+						count++;
+					}
+				}
+
+				if (count > 0) {
+					grid.text(count);
+					count = 0;
+				}
+			}
+		}
+	}
+}
 
 function showMine() {
 	const Mines = randMine();
