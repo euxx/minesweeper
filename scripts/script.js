@@ -5,39 +5,83 @@ $(function() {
 	render(16);
 	showMine();
 	showNum();
-	$(".grid").click(play);
+	$(".grid").on("mousedown contextmenu", play);
 
 });
 
 function play(event) {
+	const rowIndex = $(this).parent().index();
+	const gridIndex = $(this).index();
+	let i, j, k, x, y;
+	let count;
+	i = rowIndex;
+	j = gridIndex;
+	console.log(i + " " + j);
+	let nearPos = [[i - 1, j - 1],[i - 1, j], [i - 1, j + 1],
+								[i + 1, j - 1],[i + 1, j], [i + 1, j + 1],
+								[i, j - 1], [i, j + 1]];
+
 	let key = event.which;
+	let nowGrid = $(this);
 	if (key === 1) {
-		if ($(this).hasClass("mine")) {
-			showMine;
+		if (nowGrid.hasClass("mine")) {
 			confirm("Oh,Game Over...Play again?");
 			return;
+		} else if (!nowGrid.hasClass("blank")) {
+			nowGrid.addClass("blank");
+			count = 0;
+			for (k = 0; k < 8; k++) {
+				x = nearPos[k][0];
+				y = nearPos[k][1];
+				nearNum(x, y);
+			}
 		}
 	} else if (key === 3) {
 		event.preventDefault();
-		$(this).text("f");
+		nowGrid.text("x");
 	}
 }
 
+	function nearNum(i, j) {
+		let count = 0;
+		let k, x, y;
+		let nearPos = [[i - 1, j - 1],[i - 1, j], [i - 1, j + 1],
+									[i + 1, j - 1],[i + 1, j], [i + 1, j + 1],
+									[i, j - 1], [i, j + 1]];
+		for (k = 0; k < 8; k++) {
+			x = nearPos[k][0];
+			y = nearPos[k][1];
+			let nearGrid = $(".row").eq(x).find(".grid").eq(y);
+			if(nearGrid.hasClass("mine")) {
+				count++;
+			}
+		}
+		let newGrid = $(".row").eq(i).find(".grid").eq(j);
+		if (count === 0) {
+			newGrid.addClass("blank");
+			for (k = 0; k < 8; k++) {
+				x = nearPos[k][0];
+				y = nearPos[k][1];
+				nearNum(x, y);
+			}
+		}
+	}
+
 function showNum() {
-	let i, j, k, m, n;
+	let i, j, k, x, y;
 	let count = 0;
-	let near = [];
+	let nearPos = [];
 	for (i = 0; i < 16; i++) {
 		for (j = 0; j < 16; j++) {
-			near = [[i - 1, j - 1],[i - 1, j], [i - 1, j + 1],
-							[i + 1, j - 1],[i + 1, j], [i + 1, j + 1],
-							[i, j - 1], [i, j + 1]];
+			nearPos = [[i - 1, j - 1],[i - 1, j], [i - 1, j + 1],
+								[i + 1, j - 1],[i + 1, j], [i + 1, j + 1],
+								[i, j - 1], [i, j + 1]];
 			const currentGrid = $(".row").eq(i).find(".grid").eq(j);
 			if (!currentGrid.hasClass("mine")) {
-				for (k = 0; k < 8; k ++) {
-					m = near[k][0];
-					n = near[k][1];
-					let nearGrid = $(".row").eq(m).find(".grid").eq(n);
+				for (k = 0; k < 8; k++) {
+					x = nearPos[k][0];
+					y = nearPos[k][1];
+					let nearGrid = $(".row").eq(x).find(".grid").eq(y);
 					if(nearGrid.hasClass("mine")) {
 						count++;
 					}
@@ -52,32 +96,38 @@ function showNum() {
 }
 
 function showMine() {
-	const Mines = randMine();
+	const Mines = randMine(30);
 	const l = Mines.length;
-	let i;
+	let i, x, y;
 	for (i = 0; i < l; i++) {
-		$(".row").eq(Mines[i][0]).find(".grid").eq(Mines[i][1]).addClass("mine")
+		x = Mines[i][0];
+		y = Mines[i][1];
+		$(".row").eq(x).find(".grid").eq(y).addClass("mine")
 	}
 }
 
-function randMine() {
-	let randPos = [];
-	randPos.push(randxy());
-	randPos.push(randxy());
+function randMine(mineNum) {
+	let randPos = [randxy()];
+	let nextxy;
+	while (randPos.length < mineNum) {
+		nextxy = randxy();
+		if (notRepeat(nextxy, randPos)) {
+			randPos.push(nextxy);
+		}
+	}
+	return randPos;
+}
+
+function notRepeat(nextxy, randPos) {
 	let i;
 	let l = randPos.length;
-	while (l < 16) {
-		for (i = 0; i < l - 1; i++) {
-			if (randPos[l - 1][0] === randPos[i][0] &&
-				  randPos[l - 1][1] === randPos[i][1]) {
-				randPos[l - 1] = randxy();
-			}
+	for (i = 0; i < l - 1; i++) {
+		if (nextxy[0] === randPos[i][0] &&
+			  nextxy[1] === randPos[i][1]) {
+			return false;
 		}
-		randPos.push(randxy());
-		l = randPos.length;
 	}
-	$("p").eq(0).append(": " + l);
-	return randPos;
+	return true;
 }
 
 function randxy() {
@@ -91,7 +141,7 @@ function randNum() {
 function display() {
 	const container = $(".container")
 	container.append("<h4>Have Fun^</h4>");
-	container.append("<p>Mine number</p>");
+	container.append("<p>Mine number: 30</p>");
 	container.append("<p>Smile face</p>");
 	container.append("<p>time</p>");
 }

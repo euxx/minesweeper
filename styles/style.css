@@ -25,7 +25,7 @@ body {
 }
 
 .container {
-    width: 320px;
+    width: 420px;
     margin: 0 auto;
     padding-top: 5%;
 }
@@ -34,7 +34,6 @@ body {
     display: table;
     text-align: center;
     margin: 10px auto;
-    border-collapse: collapse;
 }
 
 .row {
@@ -42,14 +41,13 @@ body {
 }
 
 .grid {
-    box-sizing: border-box;
+    box-sizing: content-box;
     display: table-cell;
     vertical-align: middle;
-    border: 1px solid #ddd;
-    border-radius: 2px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
     width: 20px;
-    height: 20spx;
-    font-size: ;
+    height: 20px;
     color: #bbb;
 }
 
@@ -64,4 +62,9 @@ p {
 
 .mine {
     background: #ccc;
+}
+
+.blank {
+    background: #eee;
+    border-radius: 0;
 }
