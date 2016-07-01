@@ -1,7 +1,7 @@
 
 /*
 browser-sync start --server --files "**/*.css, **/*.html"
-browser-sync start --server --files "**"
+`
 */
 
 html {
@@ -59,4 +59,8 @@ body {
 p {
     margin: 0;
     text-align: right;
+}
+
+.mine {
+    background: #ccc;
 }
