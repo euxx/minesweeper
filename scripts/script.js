@@ -2,15 +2,17 @@
 $(function() {
 
 	display();
-	render();
+	render(16);
 	$(".grid").click(play);
 
 });
 
 
 function display() {
-	const cont = $(".container")
-	cont.append("<h4>Have Fun^</h4>");
+	const container = $(".container")
+	container.append("<h4>Have Fun^</h4>");
+	container.append("<p>Mine number</p>");
+	container.append("<p>time</p>");
 }
 
 function render(gridNum) {
