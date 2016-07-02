@@ -63,6 +63,10 @@ p {
     background: #bbb;
 }
 
+.now-mine {
+    background: #777;
+}
+
 .blank {
     background: #ddd;
     border-radius: 0;
