@@ -17,9 +17,9 @@ function play(event) {
 	i = rowIndex;
 	j = gridIndex;
 	console.log(i + " " + j);
-	let nearPos = [[i - 1, j - 1],[i - 1, j], [i - 1, j + 1],
-								[i + 1, j - 1],[i + 1, j], [i + 1, j + 1],
-								[i, j - 1], [i, j + 1]];
+	let nearPos = [[i - 1, j - 1], [i - 1, j], [i - 1, j + 1],
+								 [i + 1, j - 1], [i + 1, j], [i + 1, j + 1],
+								 [i, j - 1], [i, j + 1]];
 
 	let key = event.which;
 	let nowGrid = $(this);
@@ -45,9 +45,9 @@ function play(event) {
 	function nearNum(i, j) {
 		let count = 0;
 		let k, x, y;
-		let nearPos = [[i - 1, j - 1],[i - 1, j], [i - 1, j + 1],
-									[i + 1, j - 1],[i + 1, j], [i + 1, j + 1],
-									[i, j - 1], [i, j + 1]];
+		let nearPos = [[i - 1, j - 1], [i - 1, j], [i - 1, j + 1],
+									 [i + 1, j - 1], [i + 1, j], [i + 1, j + 1],
+									 [i, j - 1], [i, j + 1]];
 		for (k = 0; k < 8; k++) {
 			x = nearPos[k][0];
 			y = nearPos[k][1];
@@ -73,16 +73,16 @@ function showNum() {
 	let nearPos = [];
 	for (i = 0; i < 16; i++) {
 		for (j = 0; j < 16; j++) {
-			nearPos = [[i - 1, j - 1],[i - 1, j], [i - 1, j + 1],
-								[i + 1, j - 1],[i + 1, j], [i + 1, j + 1],
-								[i, j - 1], [i, j + 1]];
+			nearPos = [[i - 1, j - 1], [i - 1, j], [i - 1, j + 1],
+								 [i + 1, j - 1], [i + 1, j], [i + 1, j + 1],
+								 [i, j - 1], [i, j + 1]];
 			const currentGrid = $(".row").eq(i).find(".grid").eq(j);
 			if (!currentGrid.hasClass("mine")) {
 				for (k = 0; k < 8; k++) {
 					x = nearPos[k][0];
 					y = nearPos[k][1];
 					let nearGrid = $(".row").eq(x).find(".grid").eq(y);
-					if(nearGrid.hasClass("mine")) {
+					if(x >= 0 && y >= 0 && nearGrid.hasClass("mine")) {
 						count++;
 					}
 				}
@@ -111,17 +111,17 @@ function randMine(mineNum) {
 	let nextxy;
 	while (randPos.length < mineNum) {
 		nextxy = randxy();
-		if (notRepeat(nextxy, randPos)) {
+		if (isUnique(nextxy, randPos)) {
 			randPos.push(nextxy);
 		}
 	}
 	return randPos;
 }
 
-function notRepeat(nextxy, randPos) {
+function isUnique(nextxy, randPos) {
 	let i;
 	let l = randPos.length;
-	for (i = 0; i < l - 1; i++) {
+	for (i = 0; i < l; i++) {
 		if (nextxy[0] === randPos[i][0] &&
 			  nextxy[1] === randPos[i][1]) {
 			return false;
@@ -131,11 +131,11 @@ function notRepeat(nextxy, randPos) {
 }
 
 function randxy() {
-	return[randNum(), randNum()];
+	return[randNum(16), randNum(16)];
 }
 
-function randNum() {
-	return Math.floor(Math.random()*16);
+function randNum(num) {
+	return Math.floor(Math.random()*num);
 }
 
 function display() {
