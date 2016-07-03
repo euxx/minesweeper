@@ -5,6 +5,7 @@ $(function() {
 	render(16);
 	putMine();
 	$(".grid").on("mousedown contextmenu", play);
+	$(".face").on("click", reStart);
 
 });
 
@@ -24,6 +25,7 @@ function play(event) {
 		if (nowGrid.hasClass("mark-mine")) {
 			$(".mark-mine").addClass("mine");
 			nowGrid.addClass("now-mine");
+			$(".face").text("Unhappy face");
 
 			const conf = confirm("Sorry...Game Over...Try again?");
 			if (conf) {
@@ -45,10 +47,17 @@ function play(event) {
 		}
 	} else if (key === 3) {
 		event.preventDefault();
-		if (nowGrid.text() === "") {
-			nowGrid.text("x");
-		} else {
-			nowGrid.text("");
+		let flagNum = parseInt($(".flag-num").text(), 10);
+		if (!nowGrid.hasClass("blank")) {
+			if (nowGrid.text() === "") {
+				nowGrid.text("x");
+				flagNum--;
+				$(".flag-num").text(flagNum);
+			} else if (nowGrid.text() === "x") {
+				nowGrid.text("");
+				flagNum++;
+				$(".flag-num").text(flagNum);
+			}
 		}
 	}
 	const blankNum = $(".mark-blank").length;
@@ -93,7 +102,8 @@ function nearNum(i, j) {
 }
 
 function reStart() {
-	$(".grid").empty().removeClass("mark-mine now-mine mine mark-blank blank");
+	$(".grid").empty().removeClass("mark-mine now-mine mine mark-blank num-blank blank");
+	$("p").eq(1).text("Smiley face");
 	putMine();
 }
 
@@ -144,8 +154,8 @@ function randNum(num) {
 function display() {
 	const container = $(".container")
 	container.append("<h4>Have Fun^</h4>");
-	container.append("<p>Mine number: 30</p>");
-	container.append("<p>Smile face</p>");
+	container.append("<p>Flag number: <span class='flag-num'>30</span></p>");
+	container.append("<p class='face'>Smiley face</p>");
 	container.append("<p>time</p>");
 }
 
