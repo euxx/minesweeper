@@ -4,7 +4,8 @@ $(function() {
 	display();
 	render(16);
 	putMine();
-	$(".grid").on("mousedown contextmenu", play);
+	$(".grid").on("contextmenu", function() { event.preventDefault(); });
+	$(".grid").on("mousedown", play);
 	$(".face").on("click", reStart);
 
 });
