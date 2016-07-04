@@ -59,7 +59,7 @@ p {
     text-align: right;
 }
 
-.mine {
+.show-mine {
     background: #bbb;
 }
 
@@ -67,7 +67,7 @@ p {
     background: #777;
 }
 
-.blank {
+.safe-blank {
     background: #ddd;
     border-radius: 0;
 }

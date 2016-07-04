@@ -1,7 +1,7 @@
 
 $(function() {
 
-	display();
+	content();
 	render(16);
 	putMine();
 	$(".grid").on("contextmenu", function() { event.preventDefault(); });
@@ -14,30 +14,27 @@ function play(event) {
 	const nowGrid = $(this);
 	const rowIndex = nowGrid.parent().index();
 	const colIndex = nowGrid.index();
-	let i, j, k, x, y;
-	i = rowIndex;
-	j = colIndex;
-	let nearPos = [[i - 1, j - 1], [i - 1, j], [i - 1, j + 1],
-								 [i + 1, j - 1], [i + 1, j], [i + 1, j + 1],
-								 [i, j - 1], [i, j + 1]];
+	let i = rowIndex;
+	let j = colIndex;
+	let nearPos = [[i - 1, j - 1], [i - 1, j], [i - 1, j + 1], [i, j - 1],
+								 [i + 1, j - 1], [i + 1, j], [i + 1, j + 1], [i, j + 1]];
 
 	let key = event.which;
 	if (key === 1) {
-		if (nowGrid.hasClass("mark-mine")) {
-			$(".mark-mine").addClass("mine");
+		if (nowGrid.hasClass("mine-mark")) {
 			nowGrid.addClass("now-mine");
-			$(".face").text("Unhappy face");
+			$(".mine-mark").addClass("show-mine");
+			$(".face").text("Unhappy Face");
 
 			const conf = confirm("Sorry...Game Over...Try again?");
 			if (conf) {
 				reStart();
 			}
 
-			// return;
-		} else if (!nowGrid.hasClass("blank") &&
-							 !nowGrid.hasClass("num-blank")) {
-			nowGrid.addClass("blank").text("");
+		} else if (!nowGrid.is(".safe-blank, .num-mark")) {
+			nowGrid.addClass("safe-blank");
 
+			let k, x, y;
 			for (k = 0; k < 8; k++) {
 				x = nearPos[k][0];
 				y = nearPos[k][1];
@@ -47,22 +44,19 @@ function play(event) {
 			}
 		}
 	} else if (key === 3) {
-		event.preventDefault();
 		let flagNum = parseInt($(".flag-num").text(), 10);
-		if (!nowGrid.hasClass("blank")) {
-			if (nowGrid.text() === "") {
-				nowGrid.text("x");
-				flagNum--;
-				$(".flag-num").text(flagNum);
-			} else if (nowGrid.text() === "x") {
-				nowGrid.text("");
-				flagNum++;
-				$(".flag-num").text(flagNum);
-			}
+		if (nowGrid.text() === "" && !nowGrid.hasClass("safe-blank")) {
+			nowGrid.text("x");
+			flagNum--;
+			$(".flag-num").text(flagNum);
+		} else if (nowGrid.text() === "x") {
+			nowGrid.text("");
+			flagNum++;
+			$(".flag-num").text(flagNum);
 		}
 	}
-	const blankNum = $(".mark-blank").length;
-	const safeNum = $(".blank").length + $(".num-blank").length;
+	const blankNum = $(".blank-mark").length;
+	const safeNum = $(".safe-blank").length + $(".num-mark").length;
 	if (blankNum === safeNum) {
 		const conf = confirm("Congratulation! You win! Play again?");
 			if (conf) {
@@ -72,52 +66,51 @@ function play(event) {
 }
 
 function nearNum(i, j) {
+	let nearPos = [[i - 1, j - 1], [i - 1, j], [i - 1, j + 1], [i, j - 1],
+								 [i + 1, j - 1], [i + 1, j], [i + 1, j + 1], [i, j + 1]];
 	let count = 0;
 	let k, x, y;
-	let nearPos = [[i - 1, j - 1], [i - 1, j], [i - 1, j + 1],
-								 [i + 1, j - 1], [i + 1, j], [i + 1, j + 1],
-								 [i, j - 1], [i, j + 1]];
 	for (k = 0; k < 8; k++) {
 		x = nearPos[k][0];
 		y = nearPos[k][1];
 		if(x >= 0 && y >= 0 && x < 16 && y < 16) {
 			let nearGrid = $(".row").eq(x).find(".grid").eq(y);
-			if (nearGrid.hasClass("mark-mine")) {
+			if (nearGrid.hasClass("mine-mark")) {
 				count++;
 			}
 		}
 	}
 	let newGrid = $(".row").eq(i).find(".grid").eq(j);
-	if (count === 0 && !newGrid.hasClass("num-blank") &&
-										 !newGrid.hasClass("mark-mine")) {
-		newGrid.addClass("blank");
+	if (count === 0 && !newGrid.is(".num-mark, .mine-mark")) {
+		newGrid.addClass("safe-blank");
 		// for (k = 0; k < 8; k++) {
 		// 	x = nearPos[k][0];
 		// 	y = nearPos[k][1];
-			// nearNum(x, y);
+		// 	nearNum(x, y);
 		// }
-	} else if (newGrid.hasClass("mark-blank")) {
-			newGrid.addClass("num-blank");
+	} else if (newGrid.hasClass("blank-mark")) {
+			newGrid.addClass("num-mark");
 			newGrid.text(count);
 	}
 }
 
 function reStart() {
-	$(".grid").empty().removeClass("mark-mine now-mine mine mark-blank num-blank blank");
-	$("p").eq(1).text("Smiley face");
+	$(".grid").empty().removeClass("mine-mark show-mine now-mine" +
+																 "blank-mark safe-blank num-mark");
+	$("p").eq(1).text("Smiley Face");
 	putMine();
 }
 
 function putMine() {
 	const Mines = randMine(30);
 	const l = Mines.length;
-	let i, x, y;
-	for (i = 0; i < l; i++) {
-		x = Mines[i][0];
-		y = Mines[i][1];
-		$(".row").eq(x).find(".grid").eq(y).addClass("mark-mine");
+	let k, x, y;
+	for (k = 0; k < l; k++) {
+		x = Mines[k][0];
+		y = Mines[k][1];
+		$(".row").eq(x).find(".grid").eq(y).addClass("mine-mark");
 	}
-	$(".grid").not(".mark-mine").addClass("mark-blank");
+	$(".grid").not(".mine-mark").addClass("blank-mark");
 }
 
 function randMine(mineNum) {
@@ -133,11 +126,10 @@ function randMine(mineNum) {
 }
 
 function isUnique(nextxy, randPos) {
-	let i;
 	let l = randPos.length;
-	for (i = 0; i < l; i++) {
-		if (nextxy[0] === randPos[i][0] &&
-			  nextxy[1] === randPos[i][1]) {
+	let i = 0;
+	for ( ; i < l; i++) {
+		if (nextxy[0] === randPos[i][0] && nextxy[1] === randPos[i][1]) {
 			return false;
 		}
 	}
@@ -152,16 +144,15 @@ function randNum(num) {
 	return Math.floor(Math.random()*num);
 }
 
-function display() {
-	const container = $(".container")
-	container.append("<h4>Have Fun^</h4>");
-	container.append("<p>Flag number: <span class='flag-num'>30</span></p>");
-	container.append("<p class='face'>Smiley face</p>");
-	container.append("<p>time</p>");
+function content() {
+	$(".container").append("<h4>Have Fun^</h4>" +
+		"<p>Remain Flag: <span class='flag-num'>30</span></p>" +
+		"<p class='face'>Smiley Face</p>" +
+		"<p>Time</p>" +
+		"<div class='box'></div>");
 }
 
 function render(gridNum) {
-	$(".container").append("<div class='box'></div>");
 	const box = $(".box");
 	let i = 0;
 	for ( ; i < gridNum; i++) {
