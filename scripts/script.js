@@ -95,9 +95,10 @@ function nearNum(i, j) {
 }
 
 function reStart() {
-	$(".grid").empty().removeClass("mine-mark show-mine now-mine" +
+	$(".grid").empty().removeClass("mine-mark show-mine now-mine " +
 																 "blank-mark safe-blank num-mark");
 	$("p").eq(1).text("Smiley Face");
+	$(".flag-num").text(30);
 	putMine();
 }
 
