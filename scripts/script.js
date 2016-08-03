@@ -34,8 +34,8 @@ function play(event) {
 		} else if (!nowGrid.is(".safe-blank, .num-mark")) {
 			nowGrid.addClass("safe-blank");
 
-			let k, x, y;
-			for (k = 0; k < 8; k++) {
+			let x, y;
+			for (let k = 0; k < 8; k++) {
 				x = nearPos[k][0];
 				y = nearPos[k][1];
 				if (x >= 0 && y >= 0 && x < 16 && y < 16) {
@@ -69,12 +69,12 @@ function nearNum(i, j) {
 	let nearPos = [[i - 1, j - 1], [i - 1, j], [i - 1, j + 1], [i, j - 1],
 								 [i + 1, j - 1], [i + 1, j], [i + 1, j + 1], [i, j + 1]];
 	let count = 0;
-	let k, x, y;
-	for (k = 0; k < 8; k++) {
+	let x, y, nearGrid;
+	for (let k = 0; k < 8; k++) {
 		x = nearPos[k][0];
 		y = nearPos[k][1];
 		if(x >= 0 && y >= 0 && x < 16 && y < 16) {
-			let nearGrid = $(".row").eq(x).find(".grid").eq(y);
+			nearGrid = $(".row").eq(x).find(".grid").eq(y);
 			if (nearGrid.hasClass("mine-mark")) {
 				count++;
 			}
@@ -104,9 +104,8 @@ function reStart() {
 
 function putMine() {
 	const Mines = randMine(30);
-	const l = Mines.length;
-	let k, x, y;
-	for (k = 0; k < l; k++) {
+	let x, y;
+	for (let k = 0; k < Mines.length; k++) {
 		x = Mines[k][0];
 		y = Mines[k][1];
 		$(".row").eq(x).find(".grid").eq(y).addClass("mine-mark");
@@ -127,9 +126,7 @@ function randMine(mineNum) {
 }
 
 function isUnique(nextxy, randPos) {
-	let l = randPos.length;
-	let i = 0;
-	for ( ; i < l; i++) {
+	for (let i = 0; i < randPos.length; i++) {
 		if (nextxy[0] === randPos[i][0] && nextxy[1] === randPos[i][1]) {
 			return false;
 		}
@@ -154,14 +151,12 @@ function content() {
 }
 
 function render(gridNum) {
-	const box = $(".box");
-	let i = 0;
-	for ( ; i < gridNum; i++) {
-		box.append("<div class='row'></div>");
+	const $box = $(".box");
+	for (let i = 0; i < gridNum; i++) {
+		$box.append("<div class='row'></div>");
 	}
-	const row = $(".row");
-	i = 0;
-	for ( ; i < gridNum; i++) {
-		row.append("<div class='grid' /*tabindex='0'*/></div>");
+	const $row = $(".row");
+	for (let i = 0; i < gridNum; i++) {
+		$row.append("<div class='grid' /*tabindex='0'*/></div>");
 	}
 }
